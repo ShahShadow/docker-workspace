@@ -1,0 +1,18 @@
+ARG WORKSPACE_IMAGE_SOURCE_NAME=ubuntu:18.04 
+FROM $WORKSPACE_IMAGE_SOURCE_NAME
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install gosu for Docker user handling.
+RUN apt-get update && apt-get install -y \
+    gosu \
+&& rm -rf /var/lib/apt/lists/*
+
+# Give admin sudo privileges if it must.
+RUN echo "admin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Setup entry point script.
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh", "/bin/bash"]
