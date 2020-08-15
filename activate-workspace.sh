@@ -79,6 +79,11 @@ docker run -it --rm  \
     -v ${WORKSPACE_DIR}:/workspaces/${WORKSPACE_NAME} \
     -e DOCKER_HOST_USER_ID=`id -u` \
     -e DOCKER_HOST_GROUP_ID=`id -g` \
+    -e DISPLAY \
+    -e TERM \
+    --device=/dev/dri:/dev/dri \
+    -e QT_X11_NO_MITSHM=1 \
+    -v /tmp.X11-unix/:/tmp/.X11-unix \
     --network host \
     --name "$WORKSPACE_CONTAINER_NAME" \
     $WORKSPACE_IMAGE_NAME
