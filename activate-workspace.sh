@@ -73,10 +73,17 @@ fi
 docker build -t $WORKSPACE_IMAGE_SOURCE_NAME $BUILD_ARGS_STR $WORKSPACE_DIR
 docker build -t $WORKSPACE_IMAGE_NAME --build-arg WORKSPACE_IMAGE_SOURCE_NAME=$WORKSPACE_IMAGE_SOURCE_NAME -f $SRCDIR/$EXTENDED_DOCKERFILE_NAME $SRCDIR
 
+# Check for directory mount in.
+MOUNT_DIR=$WORKSPACE_DIR
+MOUNT_NAME=$WORKSPACE_NAME
+if [[ "$WORKSPACE_DIR" == */docker ]]; then
+    MOUNT_DIR=`realpath "$WORKSPACE_DIR/.."`
+    MOUNT_NAME=${MOUNT_DIR##*/}
+fi
 
 # Run container and attach.
 docker run -it --rm  \
-    -v ${WORKSPACE_DIR}:/workspaces/${WORKSPACE_NAME} \
+    -v ${MOUNT_DIR}:/workspaces/${MOUNT_NAME} \
     -e DOCKER_HOST_USER_ID=`id -u` \
     -e DOCKER_HOST_GROUP_ID=`id -g` \
     -e DISPLAY \
