@@ -84,6 +84,7 @@ fi
 # Run container and attach.
 docker run -it --rm  \
     -v ${MOUNT_DIR}:/workspaces/${MOUNT_NAME} \
+    -v `realpath ~/.cache`:/tmp/.cache \
     -e DOCKER_HOST_USER_ID=`id -u` \
     -e DOCKER_HOST_GROUP_ID=`id -g` \
     -e DISPLAY \
