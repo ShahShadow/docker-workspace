@@ -51,6 +51,11 @@ fi
 
 # Resolve information about the workspace Dockerfile.
 WORKSPACE_NAME=${WORKSPACE_DIR##*/}
+if [[ "$WORKSPACE_DIR" == */docker ]]; then
+    WORKSPACE_NAME=`realpath "$WORKSPACE_DIR/.."`
+    WORKSPACE_NAME=${WORKSPACE_NAME##*/}
+fi
+
 WORKSPACE_IMAGE_SOURCE_NAME=workspace-${WORKSPACE_NAME}-source-image
 WORKSPACE_IMAGE_NAME=workspace-${WORKSPACE_NAME}-image
 WORKSPACE_CONTAINER_NAME=workspace-${WORKSPACE_NAME}-container
@@ -90,12 +95,10 @@ docker run -it --rm  \
     -e DISPLAY \
     -e TERM \
     --device=/dev/dri:/dev/dri \
+    --device=/dev/video0:/dev/video0 \
     -e QT_X11_NO_MITSHM=1 \
     -v /tmp.X11-unix/:/tmp/.X11-unix \
     --network host \
+    --privileged \
     --name "$WORKSPACE_CONTAINER_NAME" \
     $WORKSPACE_IMAGE_NAME
-
-
-
-

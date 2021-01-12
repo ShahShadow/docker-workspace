@@ -1,12 +1,15 @@
 ARG WORKSPACE_IMAGE_SOURCE_NAME=ubuntu:18.04 
 FROM $WORKSPACE_IMAGE_SOURCE_NAME
 
-ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install gosu for Docker user handling.
 RUN apt-get update && apt-get install -y \
     gosu \
+    sudo \    
 && rm -rf /var/lib/apt/lists/*
+
+ENV NVIDIA_DRIVER_CAPABILITIES compute,graphics,utility,display,video
 
 # Give admin sudo privileges if it must.
 RUN echo "admin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
