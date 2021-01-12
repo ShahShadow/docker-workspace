@@ -8,6 +8,7 @@ GROUP_ID=${DOCKER_HOST_GROUP_ID:-9001}
  
 groupadd -g $GROUP_ID admin
 useradd --shell /bin/bash -u $USER_ID -g $GROUP_ID -o -c "" -m admin
+usermod -a -G video admin
 
 # Setup path
 echo "export PATH=$PATH" >> /home/admin/.bashrc
