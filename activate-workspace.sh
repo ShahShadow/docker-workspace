@@ -96,6 +96,7 @@ fi
 docker run -it --rm  \
     -v ${MOUNT_DIR}:/workspaces/${MOUNT_NAME} \
     -v `realpath ~/.cache`:/tmp/.cache \
+    -v `realpath ~/.ssh`:/tmp/.ssh \
     -e DOCKER_HOST_USER_ID=`id -u` \
     -e DOCKER_HOST_GROUP_ID=`id -g` \
     -e DISPLAY \

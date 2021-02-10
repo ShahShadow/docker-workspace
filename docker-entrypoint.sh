@@ -16,6 +16,9 @@ echo "export PATH=$PATH" >> /home/admin/.bashrc
 # Drop down to admin to invoke original entrypoint.
 set -- gosu admin "$@"
 
+# Link the host user .ssh directory for credentials.
+su -l admin -c "ln -s /tmp/.ssh ~/.ssh"
+
 # Impersonate admin and invoke workspace-entrypoint.sh
 if [[ -f "/usr/local/bin/workspace-entrypoint.sh" ]]; then
     su -l admin "/usr/local/bin/workspace-entrypoint.sh"
