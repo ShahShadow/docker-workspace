@@ -74,6 +74,12 @@ if [ "$(docker ps -a --quiet --filter status=exited --filter name=$WORKSPACE_CON
     docker rm $WORKSPACE_CONTAINER_NAME > /dev/null
 fi
 
+# Re-use existing container.
+if [ "$(docker ps -a --quiet --filter status=running --filter name=$WORKSPACE_CONTAINER_NAME)" ]; then                
+    docker exec -i -t -u admin $WORKSPACE_CONTAINER_NAME /bin/bash
+    exit 0
+fi
+
 # Always build the images.
 docker build -t $WORKSPACE_IMAGE_SOURCE_NAME $BUILD_ARGS_STR $WORKSPACE_DIR
 docker build -t $WORKSPACE_IMAGE_NAME --build-arg WORKSPACE_IMAGE_SOURCE_NAME=$WORKSPACE_IMAGE_SOURCE_NAME -f $SRCDIR/$EXTENDED_DOCKERFILE_NAME $SRCDIR
@@ -94,8 +100,6 @@ docker run -it --rm  \
     -e DOCKER_HOST_GROUP_ID=`id -g` \
     -e DISPLAY \
     -e TERM \
-    --device=/dev/dri:/dev/dri \
-    --device=/dev/video0:/dev/video0 \
     -e QT_X11_NO_MITSHM=1 \
     -v /tmp.X11-unix/:/tmp/.X11-unix \
     --network host \
