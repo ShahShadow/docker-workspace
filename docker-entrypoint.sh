@@ -19,6 +19,9 @@ set -- gosu admin "$@"
 # Link the host user .ssh directory for credentials.
 su -l admin -c "ln -s /tmp/.ssh ~/.ssh"
 
+# Link the host user .config directory for configurations.
+su -l admin -c "ln -s /tmp/.config ~/.config"
+
 # Impersonate admin and invoke workspace-entrypoint.sh
 if [[ -f "/usr/local/bin/workspace-entrypoint.sh" ]]; then
     su -l admin "/usr/local/bin/workspace-entrypoint.sh"

@@ -97,6 +97,7 @@ docker run -it --rm  \
     -v ${MOUNT_DIR}:/workspaces/${MOUNT_NAME} \
     -v `realpath ~/.cache`:/tmp/.cache \
     -v `realpath ~/.ssh`:/tmp/.ssh \
+    -v `realpath ~/.config`:/tmp/.config \
     -v `realpath ~/.gitconfig`:/etc/gitconfig \
     -e DOCKER_HOST_USER_ID=`id -u` \
     -e DOCKER_HOST_GROUP_ID=`id -g` \
