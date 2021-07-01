@@ -92,6 +92,34 @@ if [[ "$WORKSPACE_DIR" == */docker ]]; then
     MOUNT_NAME=${MOUNT_DIR##*/}
 fi
 
+function docker_args() {
+    # Check for docker run argument file. If exist, then parse it and pass it to docker run command below.
+    DOCKER_RUN_ARG_FILE=$WORKSPACE_DIR/Docker-run.args
+    if [[ -f "${DOCKER_RUN_ARG_FILE}" ]]; then
+        input="${DOCKER_RUN_ARG_FILE}"
+        while IFS= read -r line
+        do
+            # If there are comments in the file, ignore it.
+            if [[ ! $line = \#* ]]; then
+                # Split the arguments
+                IFS=' '
+                read -a args <<< "$line"
+                ARG_COUNT=${#args[*]}
+                # Ignore empty line
+                if [[ $ARG_COUNT -gt 0 ]]; then
+                    for (( idx = 0; idx < $ARG_COUNT; idx = idx + 2 ))
+                        do
+                        echo "${args[$idx]} ${args[$idx + 1]}"
+                        done
+                fi
+            fi
+        done < "$input"  
+    else 
+        echo ""
+    fi
+}
+
+
 # Run container and attach.
 docker run -it --rm  \
     -v ${MOUNT_DIR}:/workspaces/${MOUNT_NAME} \
@@ -105,6 +133,7 @@ docker run -it --rm  \
     -e TERM \
     -e QT_X11_NO_MITSHM=1 \
     -v /tmp.X11-unix/:/tmp/.X11-unix \
+    $(docker_args) \
     --network host \
     --privileged \
     --name "$WORKSPACE_CONTAINER_NAME" \

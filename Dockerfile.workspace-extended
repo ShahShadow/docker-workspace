@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y \
     sudo \    
 && rm -rf /var/lib/apt/lists/*
 
-ENV NVIDIA_DRIVER_CAPABILITIES all
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 # Give admin sudo privileges if it must.
 RUN echo "admin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
